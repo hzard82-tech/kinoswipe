@@ -62,7 +62,7 @@ export function MovieCard({ movie, onSwipe, onOpenDetails, isTop, stackIndex }: 
   return (
     <motion.div
       className="movie-card"
-      style={isTop ? { x, y, rotate } : undefined}
+      style={isTop ? { x, y, rotate, touchAction: 'none' } : undefined}
       initial={false}
       animate={
         isTop
@@ -72,6 +72,7 @@ export function MovieCard({ movie, onSwipe, onOpenDetails, isTop, stackIndex }: 
       drag={isTop}
       dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
       dragElastic={1}
+      dragMomentum={false}
       onDragEnd={isTop ? handleDragEnd : undefined}
       whileTap={isTop ? { cursor: 'grabbing' } : undefined}
       exit={{ opacity: 0 }}

@@ -13,6 +13,7 @@
   --green: #4a9b6e;
 
   --heading: 'Bebas Neue', system-ui, sans-serif;
+  --serif: 'Playfair Display', Georgia, serif;
   --sans: 'Inter', system-ui, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, monospace;
 
@@ -30,14 +31,21 @@
   box-sizing: border-box;
 }
 
+html {
+  overscroll-behavior-y: none;
+}
+
 body {
   margin: 0;
   min-height: 100svh;
   background: radial-gradient(ellipse at top, #171310 0%, var(--bg) 60%);
+  overscroll-behavior: none;
+  overflow-x: hidden;
 }
 
 #root {
   min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -363,6 +371,85 @@ button {
   font-size: 12px;
 }
 
+/* ---------- Menu (mobile "⋮") ---------- */
+
+.menu-wrap {
+  position: relative;
+  display: none;
+}
+
+.menu-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-raised);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  padding: 6px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-item {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dropdown-item:hover:not(:disabled) {
+  background: var(--bg-raised);
+}
+
+.dropdown-item:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dropdown-item-active {
+  color: var(--gold);
+}
+
+.dropdown-item-danger {
+  color: var(--burgundy);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 4px;
+}
+
 /* ---------- Swipe deck ---------- */
 
 .swipe-deck {
@@ -392,6 +479,9 @@ button {
   cursor: grab;
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
   touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .movie-card:active {
@@ -411,6 +501,8 @@ button {
   object-fit: contain;
   display: block;
   pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .info-btn {
@@ -457,12 +549,15 @@ button {
 }
 
 .movie-title {
-  font-family: var(--heading);
-  font-size: 26px;
-  letter-spacing: 0.5px;
-  margin: 0 0 6px;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: 0.1px;
+  margin: 0 0 8px;
   color: var(--text);
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: 8px;
 }
@@ -746,8 +841,11 @@ button {
 }
 
 .detail-tagline {
-  color: var(--gold-dim);
+  font-family: var(--serif);
   font-style: italic;
+  font-weight: 500;
+  font-size: 17px;
+  color: var(--gold-dim);
   margin: 14px 0 0;
 }
 
@@ -803,11 +901,6 @@ button {
     font-size: 36px;
   }
 
-  .header-top {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .detail-card {
     padding: 32px 24px;
   }
@@ -819,5 +912,113 @@ button {
   .detail-poster-wrap {
     flex: 0 0 auto;
     max-width: 200px;
+  }
+
+  /* Collapse tabs + actions into the "⋮" menu */
+  .tabs,
+  .header-actions {
+    display: none;
+  }
+
+  .menu-wrap {
+    display: block;
+  }
+
+  .app-shell {
+    max-width: 100%;
+    padding: 0;
+    height: 100svh;
+    height: 100dvh;
+  }
+
+  .app-header {
+    padding: 10px 14px;
+  }
+
+  .header-top {
+    margin-bottom: 0;
+  }
+
+  .brand-title.small {
+    font-size: 22px;
+  }
+
+  .rated-counter {
+    font-size: 13px;
+  }
+
+  .app-main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .category-view {
+    width: 100%;
+  }
+
+  /* Full-bleed poster deck */
+  .swipe-deck {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 0;
+  }
+
+  .card-stack {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .movie-card {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    display: block;
+  }
+
+  .perforation {
+    display: none;
+  }
+
+  .poster-wrap {
+    position: absolute;
+    inset: 0;
+  }
+
+  .movie-info {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top: none;
+    padding: 60px 18px 96px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.55) 55%, transparent 100%);
+  }
+
+  .movie-info .movie-title {
+    font-size: 28px;
+  }
+
+  .swipe-buttons {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: max(18px, env(safe-area-inset-bottom));
+    margin-top: 0;
+    z-index: 8;
+  }
+
+  .info-btn {
+    top: max(12px, env(safe-area-inset-top));
+  }
+
+  .completion-card,
+  .category-view {
+    margin: 0 16px;
   }
 }
