@@ -1,5 +1,5 @@
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import type { Direction, Movie } from '../types';
 import { POSTER_BASE } from '../lib/tmdb';
 
@@ -43,6 +43,9 @@ const DIRECTION_CLASS: Record<Direction, string> = {
 export function MovieCard({ movie, onSwipe, onOpenDetails, isTop, stackIndex }: Props) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const onSwipeRef = useRef(onSwipe);
+  onSwipeRef.current = onSwipe;
 
   const rotate = useTransform(x, [-300, 300], [-18, 18]);
 
@@ -51,44 +54,65 @@ export function MovieCard({ movie, onSwipe, onOpenDetails, isTop, stackIndex }: 
   const upOpacity = useTransform(y, [-SWIPE_THRESHOLD, -20], [1, 0]);
   const downOpacity = useTransform(y, [20, SWIPE_THRESHOLD], [0, 1]);
 
-  const dragState = useRef<{ pointerId: number; startX: number; startY: number; dragging: boolean } | null>(null);
-
-  function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
+  // Native (non-React) listeners registered with { passive: false } so preventDefault()
+  // reliably stops the browser from hijacking the gesture as a page scroll on touch devices —
+  // React attaches touch/pointer listeners as passive by default, which silently ignores
+  // preventDefault() and breaks dragging on real phones even though it looks fine in emulation.
+  useEffect(() => {
     if (!isTop) return;
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {
-      // Pointer capture can fail in rare edge cases; dragging still works via document-level move/up.
+    const el = cardRef.current;
+    if (!el) return;
+
+    let dragState: { pointerId: number; startX: number; startY: number } | null = null;
+
+    function handlePointerDown(e: PointerEvent) {
+      try {
+        el!.setPointerCapture(e.pointerId);
+      } catch {
+        // Pointer capture can fail in rare edge cases; move/up listeners still work.
+      }
+      dragState = { pointerId: e.pointerId, startX: e.clientX, startY: e.clientY };
     }
-    dragState.current = { pointerId: e.pointerId, startX: e.clientX, startY: e.clientY, dragging: true };
-  }
 
-  function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
-    const state = dragState.current;
-    if (!state || !state.dragging || state.pointerId !== e.pointerId || !isTop) return;
-    x.set(e.clientX - state.startX);
-    y.set(e.clientY - state.startY);
-  }
-
-  function endDrag(e: React.PointerEvent<HTMLDivElement>) {
-    const state = dragState.current;
-    if (!state || state.pointerId !== e.pointerId) return;
-    dragState.current = null;
-
-    const direction = resolveDirection(x.get(), y.get());
-    if (direction && isTop) {
-      onSwipe(direction);
-      return;
+    function handlePointerMove(e: PointerEvent) {
+      if (!dragState || dragState.pointerId !== e.pointerId) return;
+      e.preventDefault();
+      x.set(e.clientX - dragState.startX);
+      y.set(e.clientY - dragState.startY);
     }
-    animate(x, 0, SPRING_BACK);
-    animate(y, 0, SPRING_BACK);
-  }
+
+    function endDrag(e: PointerEvent) {
+      if (!dragState || dragState.pointerId !== e.pointerId) return;
+      dragState = null;
+
+      const direction = resolveDirection(x.get(), y.get());
+      if (direction) {
+        onSwipeRef.current(direction);
+        return;
+      }
+      animate(x, 0, SPRING_BACK);
+      animate(y, 0, SPRING_BACK);
+    }
+
+    el.addEventListener('pointerdown', handlePointerDown, { passive: false });
+    el.addEventListener('pointermove', handlePointerMove, { passive: false });
+    el.addEventListener('pointerup', endDrag, { passive: false });
+    el.addEventListener('pointercancel', endDrag, { passive: false });
+
+    return () => {
+      el.removeEventListener('pointerdown', handlePointerDown);
+      el.removeEventListener('pointermove', handlePointerMove);
+      el.removeEventListener('pointerup', endDrag);
+      el.removeEventListener('pointercancel', endDrag);
+    };
+  }, [isTop, x, y]);
 
   const scale = 1 - stackIndex * 0.04;
   const yOffset = stackIndex * 12;
 
   return (
     <motion.div
+      ref={cardRef}
       className="movie-card"
       style={isTop ? { x, y, rotate, touchAction: 'none' } : undefined}
       initial={false}
@@ -97,10 +121,6 @@ export function MovieCard({ movie, onSwipe, onOpenDetails, isTop, stackIndex }: 
           ? undefined
           : { scale, y: yOffset, opacity: stackIndex < 3 ? 1 : 0 }
       }
-      onPointerDown={isTop ? handlePointerDown : undefined}
-      onPointerMove={isTop ? handlePointerMove : undefined}
-      onPointerUp={isTop ? endDrag : undefined}
-      onPointerCancel={isTop ? endDrag : undefined}
       exit={{ opacity: 0 }}
     >
       <div className="perforation perforation-left" />
