@@ -93,14 +93,14 @@ button {
 
 .film-card {
   position: relative;
-  background: var(--bg-card);
+  background: linear-gradient(160deg, var(--bg-card) 0%, var(--bg-raised) 100%);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 16px;
   padding: 40px 48px;
   max-width: 460px;
   width: 100%;
   text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
 }
 
 .perforation {
@@ -231,10 +231,10 @@ button {
   font-size: 15px;
   font-weight: 600;
   padding: 12px 20px;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: transform 0.1s ease, opacity 0.15s ease;
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
 .btn:active {
@@ -247,14 +247,20 @@ button {
 }
 
 .btn-gold {
-  background: var(--gold);
+  background: linear-gradient(135deg, #e8c766, var(--gold));
   color: #1a1408;
   margin-top: 18px;
   width: 100%;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.25);
+}
+
+.btn-gold:hover:not(:disabled) {
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+  transform: translateY(-1px);
 }
 
 .btn-outline {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.02);
   border-color: var(--border);
   color: var(--text);
 }
@@ -262,6 +268,7 @@ button {
 .btn-outline:hover:not(:disabled) {
   border-color: var(--gold);
   color: var(--gold);
+  background: rgba(212, 175, 55, 0.08);
 }
 
 .btn-danger {
@@ -270,22 +277,31 @@ button {
 
 .btn-danger:hover:not(:disabled) {
   border-color: var(--burgundy);
+  background: rgba(178, 58, 78, 0.08);
 }
 
 .btn-danger-solid {
-  background: var(--burgundy);
+  background: linear-gradient(135deg, #c94a5e, var(--burgundy));
   color: #fff;
   border: none;
   font-size: 15px;
   font-weight: 600;
   padding: 12px 20px;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
+  box-shadow: 0 8px 24px rgba(178, 58, 78, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-danger-solid:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(178, 58, 78, 0.5);
 }
 
 .btn-small {
   padding: 6px 12px;
   font-size: 13px;
+  border-radius: 8px;
 }
 
 /* ---------- Loading ---------- */
@@ -301,6 +317,7 @@ button {
 .progress-bar-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.5);
   transition: width 0.3s ease;
 }
 
@@ -355,6 +372,7 @@ button {
   cursor: pointer;
   border-bottom: 2px solid transparent;
   white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .tab:hover {
@@ -364,6 +382,7 @@ button {
 .tab-active {
   color: var(--gold);
   border-bottom-color: var(--gold);
+  text-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
 }
 
 .tab-count {
@@ -379,11 +398,13 @@ button {
 }
 
 .menu-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg-raised);
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(20, 18, 15, 0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   color: var(--text);
   font-size: 20px;
   line-height: 1;
@@ -391,11 +412,18 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .menu-btn:hover {
   border-color: var(--gold);
   color: var(--gold);
+  transform: translateY(-1px);
+}
+
+.menu-btn:active {
+  transform: scale(0.94);
 }
 
 .dropdown-menu {
@@ -403,10 +431,12 @@ button {
   top: calc(100% + 8px);
   right: 0;
   min-width: 220px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  background: rgba(26, 23, 20, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
   padding: 6px;
   z-index: 30;
   display: flex;
@@ -419,16 +449,17 @@ button {
   color: var(--text);
   text-align: left;
   padding: 10px 12px;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   gap: 12px;
+  transition: background 0.12s ease;
 }
 
 .dropdown-item:hover:not(:disabled) {
-  background: var(--bg-raised);
+  background: rgba(212, 175, 55, 0.1);
 }
 
 .dropdown-item:disabled {
@@ -471,13 +502,13 @@ button {
   position: absolute;
   inset: 0;
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   cursor: grab;
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.05) inset;
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
@@ -509,11 +540,11 @@ button {
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 1px solid var(--border);
-  background: rgba(10, 9, 8, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 9, 8, 0.55);
   color: var(--gold);
   font-family: var(--heading);
   font-size: 16px;
@@ -522,11 +553,15 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, border-color 0.15s ease;
 }
 
 .info-btn:hover {
   border-color: var(--gold);
+  transform: scale(1.06);
 }
 
 .poster-placeholder {
@@ -592,8 +627,9 @@ button {
 
 .genre-chip {
   font-size: 12px;
-  padding: 3px 10px;
-  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 20px;
   color: var(--text-dim);
 }
@@ -643,30 +679,36 @@ button {
 
 .swipe-buttons {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 16px;
   margin-top: 28px;
+  width: 100%;
 }
 
 .swipe-btn {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  border: 2px solid var(--border);
-  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(26, 23, 20, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   font-size: 22px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s ease, border-color 0.15s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .swipe-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.05);
 }
 
 .swipe-btn:active {
-  transform: scale(0.94);
+  transform: scale(0.92);
 }
 
 .btn-not-interested {
@@ -675,6 +717,7 @@ button {
 
 .btn-not-interested:hover {
   border-color: var(--text-dim);
+  box-shadow: 0 8px 24px rgba(168, 159, 145, 0.3);
 }
 
 .btn-disliked {
@@ -683,6 +726,7 @@ button {
 
 .btn-disliked:hover {
   border-color: var(--burgundy);
+  box-shadow: 0 8px 24px rgba(178, 58, 78, 0.4);
 }
 
 .btn-liked {
@@ -691,6 +735,7 @@ button {
 
 .btn-liked:hover {
   border-color: var(--green);
+  box-shadow: 0 8px 24px rgba(74, 155, 110, 0.4);
 }
 
 .btn-watchlist {
@@ -699,6 +744,7 @@ button {
 
 .btn-watchlist:hover {
   border-color: var(--gold);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
 }
 
 /* ---------- Category grid ---------- */
@@ -734,15 +780,27 @@ button {
   border: none;
   background: none;
   cursor: pointer;
+  border-radius: 10px;
+  transition: transform 0.18s ease;
+}
+
+.grid-poster-btn:hover {
+  transform: translateY(-4px);
 }
 
 .grid-poster {
   width: 100%;
   aspect-ratio: 2 / 3;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #000;
   border: 1px solid var(--border);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.grid-poster-btn:hover .grid-poster {
+  border-color: var(--gold);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
 }
 
 .grid-poster-placeholder {
@@ -774,7 +832,9 @@ button {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -800,19 +860,21 @@ button {
   position: absolute;
   top: 16px;
   right: 16px;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--bg-raised);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(20, 18, 15, 0.7);
   color: var(--text-dim);
   cursor: pointer;
   z-index: 2;
+  transition: transform 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .modal-close:hover {
   color: var(--gold);
   border-color: var(--gold);
+  transform: scale(1.08) rotate(90deg);
 }
 
 .detail-body {
@@ -1033,6 +1095,11 @@ button {
     bottom: max(18px, env(safe-area-inset-bottom));
     margin-top: 0;
     z-index: 8;
+    pointer-events: none;
+  }
+
+  .swipe-buttons .swipe-btn {
+    pointer-events: auto;
   }
 
   .info-btn {
